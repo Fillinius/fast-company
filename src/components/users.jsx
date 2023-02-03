@@ -6,7 +6,7 @@ const Users=()=>{
   // Динамический рендер классов
     const getBadgeClasses =()=>{
     let colorClass = "badge "
-    colorClass+= api.users.fetchAll().length===0 ? "bg-warning text-dark" : "bg-primary"
+    colorClass+= users.length===0 ? "bg-warning text-dark" : "bg-primary"
     return colorClass
   }
 
@@ -16,17 +16,20 @@ const Users=()=>{
    setUsers((prevState)=>prevState.filter(user=>user._id!==userId
  ))
  }
-
- let number = api.users.fetchAll().length
- const handlePhrase =(number) =>{
-  setUsers((prevState)=> 
-  prevState.length>=2 && prevState.length<=4 ? "человека тусанут" : "человек тусанет");
+let number = ""
+ const handlePhrase = ()=>{
   
-  }
+  number += users.length>=2 && users.length<=4 ? (`${users.length} человека тусанут с тобой сегодня`) : (`${users.length} человек тусанет с тобой сегодня`)
+   return number 
+
+ }
  
   return (
     <>
-  <h1><span className={getBadgeClasses()}>{`${number} ${handlePhrase()} `} с тобой сегодня</span></h1>
+  {number!==0
+    ? <h1><span className={getBadgeClasses()}>{handlePhrase()}</span></h1>
+    : <h1><span className={getBadgeClasses()}>Никто не тусанет</span></h1>
+  }
   
   <table className="table">
     <thead>
