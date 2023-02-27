@@ -3,15 +3,18 @@ import PropTypes from 'prop-types'
 // компонент где будут отражаться элементы для фильтрации
 
 const GroupList = ({ items, valueProperty, contentProperty, onItemSelect, selectedItem }) => {
+  const changeMetod = () =>
+    Array.isArray(items) ? items : Object.values(items)
+
   return (
     <ul className="list-group">
-      {Object.keys(items).map((item) => (
+      {changeMetod().map((item) => (
         <li
-          key={items[item][valueProperty]}
-          className={"list-group-item " + (selectedItem === items[item] ? "active" : "")}
-          onClick={() => onItemSelect(items[item])}
+          key={item[valueProperty]}
+          className={"list-group-item " + (selectedItem === item ? "active" : "")}
+          onClick={() => onItemSelect(item)}
           role='button'
-        >{items[item][contentProperty]}
+        >{item[contentProperty]}
         </li>
       ))}
     </ul>
@@ -31,3 +34,4 @@ GroupList.propTypes = {
 
 
 export default GroupList;
+

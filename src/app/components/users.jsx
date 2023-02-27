@@ -17,6 +17,7 @@ const Users = ({ users, ...rest }) => {
     }, [])
 
     const handleProfessionSelect = (item) => {
+        console.log(item);
         setSelectedProf(item);
     }
 
@@ -25,6 +26,7 @@ const Users = ({ users, ...rest }) => {
     } // метод который отлав клик при нажатии на стр (на какую стр клик)
 
     //const userGroup = paginate(users, currentPage, pageSize)
+
     const filtersUsers = selectedProf
         ? users.filter((user) => user.profession === selectedProf)
         : users
@@ -43,8 +45,8 @@ const Users = ({ users, ...rest }) => {
                         items={professions}
                         onItemSelect={handleProfessionSelect}
                         valueProperty='_id'
-                        contentProperty='name'>
-                    </GroupList>
+                        contentProperty='name'
+                    />
                     <button
                         className="btn btn-secondary m-2"
                         onClick={clearFilter}
