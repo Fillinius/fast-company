@@ -9,16 +9,16 @@ import SearchStatus from "./searchStatus";
 
 const Users = ({ users, ...rest }) => {
     const [currentPage, setCurrentPage] = useState(1)
-    const [professions, setProfessions] = useState()
+    const [professions, setProfession] = useState()
     const [selectedProf, setSelectedProf] = useState()
     const pageSize = 2 // отображаем по 4 пользователя на каждой страние 
     useEffect(() => {
-        api.professions.fetchAll().then((data) => setProfessions(data))
+        api.professions.fetchAll().then((data) => setProfession(data))
     }, [])
 
     const handleProfessionSelect = (item) => {
-        console.log(item);
-        setSelectedProf(item);
+        console.log(item)
+        setSelectedProf(item)
     }
 
     const handlePageChange = (pageIndex) => {
@@ -28,8 +28,12 @@ const Users = ({ users, ...rest }) => {
     //const userGroup = paginate(users, currentPage, pageSize)
 
     const filtersUsers = selectedProf
-        ? users.filter((user) => user.profession === selectedProf)
+        ? users.filter((user) =>
+            JSON.stringify(user.profession) === JSON.stringify(selectedProf))
         : users
+
+    console.log(selectedProf)
+    console.log(filtersUsers);
     const count = filtersUsers.length
     const userGroup = paginate(filtersUsers, currentPage, pageSize)
     const clearFilter = () => {
