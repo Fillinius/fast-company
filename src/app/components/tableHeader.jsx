@@ -3,14 +3,6 @@ import PropTypes from 'prop-types'
 
 const TableHeader = ({ onSort, selectedSort, columns }) => {
   const handleSort = (item) => {
-
-
-    Object.keys(columns).map((column) => {
-      return (console.log(columns[column].path))
-    })
-
-    console.log(selectedSort.path);
-
     if (selectedSort.path === item) {
       onSort({ ...selectedSort, order: selectedSort.order === 'asc' ? 'desc' : 'asc' })
     } else {
@@ -58,10 +50,3 @@ TableHeader.propTypes = {
 
 export default TableHeader;
 
-// columns[column][columns[column].path]
-/*
-columns[column][
-              columns[column].path === selectedSort.path
-                ? columns[column].path
-                : undefined] &&
-*/
