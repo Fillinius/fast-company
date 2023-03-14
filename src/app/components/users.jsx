@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { paginate } from "../utils/paginate";
 import Pagination from "./pagination";
-//import User from "./user";
 import PropTypes from 'prop-types';
 import GroupList from "./groupList";
 import api from "../api"
@@ -115,7 +114,7 @@ const Users = () => {
 };
 Users.propTypes = {
     handleDelete: PropTypes.func,
-    users: PropTypes.array.isRequired,
+    users: PropTypes.array,
     handleToggleBookMark: PropTypes.func,
     count: PropTypes.number,
 }
