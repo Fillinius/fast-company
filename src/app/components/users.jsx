@@ -42,6 +42,7 @@ const Users = () => {
     }, [])
 
     const handleProfessionSelect = (item) => {
+        setSearch("")
         setSelectedProf(item)
     }
     const handleSort = (item) => {
@@ -72,6 +73,7 @@ const Users = () => {
         }
         //// метод по search
         const handleChangeSearch = ({ target }) => {
+            // setSelectedProf()
             setSearch(target.value)
 
 
