@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { paginate } from "../utils/paginate";
 import Pagination from "./pagination";
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import GroupList from "./groupList";
 import api from "../api"
 import SearchStatus from "./searchStatus";
 import UserTable from "./usersTable";
 import _ from "lodash";
+import Search from "./search";
 
 const Users = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [professions, setProfession] = useState()
     const [selectedProf, setSelectedProf] = useState()
+    const [search, setSearch] = useState("")
     const [sortBy, setSortBy] = useState({ iter: 'name', order: 'asc' })
-    const pageSize = 5 // отображаем по 4 пользователя на каждой страние 
+    const pageSize = 4 // отображаем по 4 пользователя на каждой страние 
 
     const [users, setUsers] = useState()
     // При использовании асинхронного запроса
@@ -34,7 +36,6 @@ const Users = () => {
             })
         )
     }
-
 
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfession(data))
@@ -63,18 +64,28 @@ const Users = () => {
             : users
 
         const count = filtersUsers.length
+
         const sortedUsers = _.orderBy(filtersUsers, [sortBy.path], [sortBy.order])
         const usersCrop = paginate(sortedUsers, currentPage, pageSize)
         const clearFilter = () => {
             setSelectedProf()
         }
+        //// метод по search
+        const handleChangeSearch = ({ target }) => {
+            setSearch(target.value)
+
+
+        }
+        const searchTextUser = users.filter((user) =>
+            user.name.toLowerCase().includes(search.toLowerCase()))
+
 
         return (
             <div className="d-flex">
                 {professions && (
                     <div className="d-flex flex-column flex-shrink-0 p-3">
                         <GroupList
-                            selectedItem={selectedProf}
+                            selectedItem={search === "" ? selectedProf : searchTextUser}
                             items={professions}
                             onItemSelect={handleProfessionSelect}
                             valueProperty='_id'
@@ -88,10 +99,16 @@ const Users = () => {
                     </div>
                 )}
                 <div className="d-flex flex-column ">
-                    <SearchStatus length={count} />
+                    <SearchStatus length={search === "" ? count : searchTextUser.length} />
+                    <Search
+                        type="text"
+                        value={search}
+                        onChange={handleChangeSearch}
+
+                    />
                     {count > 0 && (
                         <UserTable
-                            users={usersCrop}
+                            users={search === "" ? usersCrop : searchTextUser}
                             onSort={handleSort}
                             selectedSort={sortBy}
                             onDelete={handleDelete}
@@ -100,7 +117,7 @@ const Users = () => {
                     )}
                     <div className="d-flex justify-content-center">
                         <Pagination
-                            itemsCount={count}
+                            itemsCount={search === "" ? count : searchTextUser.length}
                             pageSize={pageSize}
                             onPageChange={handlePageChange}
                             currentPage={currentPage} />
@@ -112,10 +129,5 @@ const Users = () => {
     }
     return 'loading...'
 };
-Users.propTypes = {
-    handleDelete: PropTypes.func,
-    users: PropTypes.array,
-    handleToggleBookMark: PropTypes.func,
-    count: PropTypes.number,
-}
+
 export default Users;
