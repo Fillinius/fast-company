@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { paginate } from "../utils/paginate";
-import Pagination from "./pagination";
-//import PropTypes from 'prop-types';
-import GroupList from "./groupList";
+import Pagination from "./common/pagination";
+import GroupList from "./common/groupList";
 import api from "../api"
-import SearchStatus from "./searchStatus";
-import UserTable from "./usersTable";
+import SearchStatus from "./ui/searchStatus";
+import UserTable from "./ui/usersTable";
 import _ from "lodash";
 import Search from "./search";
 
@@ -46,7 +45,6 @@ const Users = () => {
         setSelectedProf(item)
     }
     const handleSort = (item) => {
-        //console.log(sortBy.iter);
         setSortBy(item)
     }
 
