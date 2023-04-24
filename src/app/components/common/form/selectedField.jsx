@@ -1,6 +1,4 @@
-import React
-  from 'react';
-//import { professions } from '../../../api/fake.api/professions.api';
+import React from 'react';
 import PropTypes from 'prop-types'
 
 const SelectedField = ({ label, value, onChange, defaultOption, options, error, name }) => {
@@ -11,8 +9,6 @@ const SelectedField = ({ label, value, onChange, defaultOption, options, error, 
   const getInputClasses = () => {
     return "form-select" + (error ? " is-invalid" : "");
   }// состояние класса, цвет формы
-
-
   const optionsArray =
     !Array.isArray(options) && typeof options === "object"
       ? Object.values(options)
@@ -33,7 +29,7 @@ const SelectedField = ({ label, value, onChange, defaultOption, options, error, 
           <option
             value={option.value}
             key={option.value}>
-            {option.label}
+            {option.name}
           </option>))}
 
 

@@ -1,26 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
-//import { Link } from 'react-router-dom';
 import api from '../../../api';
 import { useParams } from 'react-router-dom';
-import Qualities from "../../ui/qualities";
-import { useHistory } from "react-router-dom";
-
+import CommementsListComponent from './commmentsListComponent';
+import QualitiesCard from '../../ui/qualitiesCard';
+import CompletedMeetingsCard from '../../ui/complietedMeettingsCard';
+import UserCard from '../../ui/userCard';
 
 const User = () => {
   const params = useParams()
-  const history = useHistory()
   const { userId } = params
   const [user, setUser] = useState()
   useEffect(() => {
     api.users.getById(userId).then((data) => setUser(data))
   }, [])
-  const handleClick = () => {
-    history.push(`${userId}/edit`)
-  }
   return (
     user
-      ? <div className='m-5'>
+      ? <div className="container">
+        <div className="row gutters-sm">
+          <div className="col-md-4 mb-3">
+            <UserCard user={user} userId={userId} />
+            <QualitiesCard data={user.qualities} />
+            <CompletedMeetingsCard data={user.completedMeetings} />
+          </div>
+          <div className="col-md-8">
+            <CommementsListComponent />
+          </div>
+        </div>
+      </div>
+
+      : <> <p>Loading...</p>
+
+      </>
+  );
+}
+User.propTypes = {
+  match: PropTypes.object.isRequired,
+}
+export default User;
+/*
+<div className='m-5'>
         <h1> {user.name}</h1>
         <h2>Профессия: {user.profession.name}</h2>
         <Qualities qualities={user.qualities} />
@@ -28,27 +47,4 @@ const User = () => {
         <h2>Rate: {user.rate}</h2>
         <button onClick={handleClick}> Edit</button>
       </div>
-      : <>
-        <p>Loading...</p>
-
-      </>
-  );
-}
-
-User.propTypes = {
-  match: PropTypes.object.isRequired,
-
-}
-export default User;
-
-/*
-<>
-        <p>{`Имя: ${user.name}`}</p>
-        <p>{`Профессия: ${user.profession.name}`}</p>
-        <p>{user.qualities.map((qualitie) => <p key={qualitie.id} className={`badge text-wrap bg-${qualitie.color}`}>{qualitie.name}</p>)}</p>
-        <p>{`Встретился раз: ${user.completedMeetings}`}</p>
-        <p>{`Оценка: ${user.rate}`}</p>
-
-        <Link to={`${userId}/edit`} type="button" className="btn btn-info">Edit</Link>
-      </>
 */

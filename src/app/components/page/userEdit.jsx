@@ -20,7 +20,6 @@ const UserEdit = () => {
     sex: "male",
     qualities: []
   })
-  console.log(user);
   const [qualities, setQualities] = useState([])
   const [professions, setProfession] = useState([])
   const [errors, setErrors] = useState({}) // к блоку ошибка
@@ -141,6 +140,7 @@ const UserEdit = () => {
     }
   }
   return (
+
     <div className='m-5'>
       {user._id && professions && qualities && (
         <form onSubmit={handleSubmit}>
@@ -193,12 +193,9 @@ const UserEdit = () => {
             Submit</button>
         </form>
       )
-
       }
-
     </div>
   );
 }
 
 export default UserEdit;
-

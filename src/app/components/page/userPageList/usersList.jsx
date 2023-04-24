@@ -7,9 +7,8 @@ const UsersList = ({ users }) => {
     {users.map((user) => (<h3 key={user.id}>{user.label}</h3>))}
   </>)
 }
-
-export default UsersList;
 UsersList.propTypes = {
   users: PropTypes.array
-
 }
+
+export default UsersList;
