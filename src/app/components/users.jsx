@@ -7,6 +7,7 @@ import SearchStatus from "./ui/searchStatus";
 import UserTable from "./ui/usersTable";
 import _ from "lodash";
 import Search from "./search";
+import UserProvider, { useUser } from "../hooks/useUsers";
 
 const Users = () => {
     const [currentPage, setCurrentPage] = useState(1)
@@ -16,24 +17,28 @@ const Users = () => {
     const [sortBy, setSortBy] = useState({ iter: 'name', order: 'asc' })
     const pageSize = 4 // отображаем по 4 пользователя на каждой страние 
 
-    const [users, setUsers] = useState()
+    const users = useUser()
+    console.log(users);
+    console.log(useUser())
+    // const [users, setUsers] = useState()
     // При использовании асинхронного запроса
-    useEffect(() => {
-        api.users.fetchAll().then((data) => setUsers(data))
-    }, [])
+    // useEffect(() => {
+    //     api.users.fetchAll().then((data) => setUsers(data))
+    // }, [])
 
     const handleDelete = (userId) => {
-        setUsers(users.filter((user) => user._id !== userId))
+        //setUsers(users.filter((user) => user._id !== userId))
+        console.log('userId', userId);
     }
     const handleToggleBookMark = (id) => {
-        setUsers(
-            users.map((user) => {
-                if (user._id === id) {
-                    return { ...user, bookmark: !user.bookmark }
-                }
-                return user
-            })
-        )
+        const newArray = users.map((user) => {
+            if (user._id === id) {
+                return { ...user, bookmark: !user.bookmark }
+            }
+            return user
+        })
+        console.log('newArray', newArray);
+        //setUsers( newArray)
     }
 
     useEffect(() => {
@@ -81,50 +86,51 @@ const Users = () => {
 
 
         return (
-            <div className="d-flex">
-                {professions && (
-                    <div className="d-flex flex-column flex-shrink-0 p-3">
-                        <GroupList
-                            selectedItem={search === "" ? selectedProf : searchTextUser}
-                            items={professions}
-                            onItemSelect={handleProfessionSelect}
-                            valueProperty='_id'
-                            contentProperty='name'
-                        />
-                        <button
-                            className="btn btn-secondary m-2"
-                            onClick={clearFilter}
-                        >Очистить
-                        </button>
-                    </div>
-                )}
-                <div className="d-flex flex-column ">
-                    <SearchStatus length={search === "" ? count : searchTextUser.length} />
-                    <Search
-                        type="text"
-                        value={search}
-                        onChange={handleChangeSearch}
-
-                    />
-                    {count > 0 && (
-                        <UserTable
-                            users={search === "" ? usersCrop : searchTextUser}
-                            onSort={handleSort}
-                            selectedSort={sortBy}
-                            onDelete={handleDelete}
-                            onToggleBookMark={handleToggleBookMark}
-                        />
+            <UserProvider>
+                <div className="d-flex">
+                    {professions && (
+                        <div className="d-flex flex-column flex-shrink-0 p-3">
+                            <GroupList
+                                selectedItem={search === "" ? selectedProf : searchTextUser}
+                                items={professions}
+                                onItemSelect={handleProfessionSelect}
+                                valueProperty='_id'
+                                contentProperty='name'
+                            />
+                            <button
+                                className="btn btn-secondary m-2"
+                                onClick={clearFilter}
+                            >Очистить
+                            </button>
+                        </div>
                     )}
-                    <div className="d-flex justify-content-center">
-                        <Pagination
-                            itemsCount={search === "" ? count : searchTextUser.length}
-                            pageSize={pageSize}
-                            onPageChange={handlePageChange}
-                            currentPage={currentPage} />
+                    <div className="d-flex flex-column ">
+                        <SearchStatus length={search === "" ? count : searchTextUser.length} />
+                        <Search
+                            type="text"
+                            value={search}
+                            onChange={handleChangeSearch}
+                        />
+                        {count > 0 && (
+                            <UserTable
+                                users={search === "" ? usersCrop : searchTextUser}
+                                onSort={handleSort}
+                                selectedSort={sortBy}
+                                onDelete={handleDelete}
+                                onToggleBookMark={handleToggleBookMark}
+                            />
+                        )}
+                        <div className="d-flex justify-content-center">
+                            <Pagination
+                                itemsCount={search === "" ? count : searchTextUser.length}
+                                pageSize={pageSize}
+                                onPageChange={handlePageChange}
+                                currentPage={currentPage} />
+                        </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
+            </UserProvider>
         );
     }
     return 'loading...'

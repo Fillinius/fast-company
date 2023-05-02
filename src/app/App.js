@@ -7,6 +7,7 @@ import Login from './components/login'
 import NotFound from './components/not-found'
 import User from './components/page/userPage'
 import UserEdit from './components/page/userEdit'
+import { ToastContainer } from 'react-toastify'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/" component={Main} />
         <Redirect to="404" />
       </Switch>
+      <ToastContainer />
     </div>
   )
 }
