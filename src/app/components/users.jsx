@@ -7,7 +7,7 @@ import SearchStatus from "./ui/searchStatus";
 import UserTable from "./ui/usersTable";
 import _ from "lodash";
 import Search from "./search";
-import UserProvider, { useUser } from "../hooks/useUsers";
+import { useUser } from "../hooks/useUsers";
 
 const Users = () => {
     const [currentPage, setCurrentPage] = useState(1)
@@ -17,9 +17,9 @@ const Users = () => {
     const [sortBy, setSortBy] = useState({ iter: 'name', order: 'asc' })
     const pageSize = 4 // отображаем по 4 пользователя на каждой страние 
 
-    const users = useUser()
-    console.log(users);
-    console.log(useUser())
+    const { users } = useUser()
+    // console.log(users);
+    // console.log(useUser())
     // const [users, setUsers] = useState()
     // При использовании асинхронного запроса
     // useEffect(() => {
@@ -86,51 +86,51 @@ const Users = () => {
 
 
         return (
-            <UserProvider>
-                <div className="d-flex">
-                    {professions && (
-                        <div className="d-flex flex-column flex-shrink-0 p-3">
-                            <GroupList
-                                selectedItem={search === "" ? selectedProf : searchTextUser}
-                                items={professions}
-                                onItemSelect={handleProfessionSelect}
-                                valueProperty='_id'
-                                contentProperty='name'
-                            />
-                            <button
-                                className="btn btn-secondary m-2"
-                                onClick={clearFilter}
-                            >Очистить
-                            </button>
-                        </div>
-                    )}
-                    <div className="d-flex flex-column ">
-                        <SearchStatus length={search === "" ? count : searchTextUser.length} />
-                        <Search
-                            type="text"
-                            value={search}
-                            onChange={handleChangeSearch}
-                        />
-                        {count > 0 && (
-                            <UserTable
-                                users={search === "" ? usersCrop : searchTextUser}
-                                onSort={handleSort}
-                                selectedSort={sortBy}
-                                onDelete={handleDelete}
-                                onToggleBookMark={handleToggleBookMark}
-                            />
-                        )}
-                        <div className="d-flex justify-content-center">
-                            <Pagination
-                                itemsCount={search === "" ? count : searchTextUser.length}
-                                pageSize={pageSize}
-                                onPageChange={handlePageChange}
-                                currentPage={currentPage} />
-                        </div>
-                    </div>
 
+            <div className="d-flex">
+                {professions && (
+                    <div className="d-flex flex-column flex-shrink-0 p-3">
+                        <GroupList
+                            selectedItem={search === "" ? selectedProf : searchTextUser}
+                            items={professions}
+                            onItemSelect={handleProfessionSelect}
+                            valueProperty='_id'
+                            contentProperty='name'
+                        />
+                        <button
+                            className="btn btn-secondary m-2"
+                            onClick={clearFilter}
+                        >Очистить
+                        </button>
+                    </div>
+                )}
+                <div className="d-flex flex-column ">
+                    <SearchStatus length={search === "" ? count : searchTextUser.length} />
+                    <Search
+                        type="text"
+                        value={search}
+                        onChange={handleChangeSearch}
+                    />
+                    {count > 0 && (
+                        <UserTable
+                            users={search === "" ? usersCrop : searchTextUser}
+                            onSort={handleSort}
+                            selectedSort={sortBy}
+                            onDelete={handleDelete}
+                            onToggleBookMark={handleToggleBookMark}
+                        />
+                    )}
+                    <div className="d-flex justify-content-center">
+                        <Pagination
+                            itemsCount={search === "" ? count : searchTextUser.length}
+                            pageSize={pageSize}
+                            onPageChange={handlePageChange}
+                            currentPage={currentPage} />
+                    </div>
                 </div>
-            </UserProvider>
+
+            </div>
+
         );
     }
     return 'loading...'
