@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import TextField from '../common/form/textField';
 import { validator } from '../../utils/validator';
 import CheckBoxField from '../common/form/checkBoxField';
+import { useLogin } from '../../hooks/useLogin';
+import { useHistory } from 'react-router-dom';
 //import * as yup from 'yup'
 
 const LoginForm = () => {
+  // console.log(process.env);
+  const history = useHistory()
   const [data, setData] = useState({ email: "", password: "", stayOn: false })
   const [errors, setErrors] = useState({}) // к блоку ошибка
+  const { login } = useLogin()
   // блок событие ввода данных в форму
   const handleChange = (target) => {
     setData((prevState) => ({
@@ -31,11 +36,19 @@ const LoginForm = () => {
   })
   */
   // Блок событие отправка формы
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const isValid = validate()  // относится к блок ошибка
-    if (!isValid) return        // относится к блок ошибка
+    if (!isValid)
+      return        // относится к блок ошибка
+
     console.log(data);
+    try {
+      await login(data)
+      history.push('/')
+    } catch (error) {
+      setErrors(error)
+    }
   }
   // блок валидации по полю
   useEffect(() => {

@@ -18,13 +18,6 @@ export const QualityProvider = ({ children }) => {
     getQualityList()
   }, [])
 
-  useEffect(() => {
-    if (error !== null) {
-      toast(error)
-      setError(null)
-    }
-  }, [error])
-
   function getQuality(id) {
     return quality.find((q) => q._id === id)
   }
@@ -42,6 +35,12 @@ export const QualityProvider = ({ children }) => {
     const { message } = error.response.data
     setError(message)
   }
+  useEffect(() => {
+    if (error !== null) {
+      toast(error)
+      setError(null)
+    }
+  }, [error])
   return (
     <QualityContext.Provider value={{ quality, isLoading, getQuality }}>
       {children}
