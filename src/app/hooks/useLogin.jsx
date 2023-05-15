@@ -13,8 +13,7 @@ export const useLogin = () => {
 
 const LoginProvider = ({ children }) => {
   const [error, setError] = useState(null)
-  const keyFireBasePvivate = 'AIzaSyCnZHvEM4ehUF5fJgct0GgWULnHMLLLADk'
-  const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${keyFireBasePvivate}`
+  const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`
 
   async function login({ email, password }) {
     try {

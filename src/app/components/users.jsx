@@ -84,9 +84,7 @@ const Users = () => {
         const searchTextUser = users.filter((user) =>
             user.name.toLowerCase().includes(search.toLowerCase()))
 
-
         return (
-
             <div className="d-flex">
                 {professions && (
                     <div className="d-flex flex-column flex-shrink-0 p-3">
@@ -128,9 +126,7 @@ const Users = () => {
                             currentPage={currentPage} />
                     </div>
                 </div>
-
             </div>
-
         );
     }
     return 'loading...'
