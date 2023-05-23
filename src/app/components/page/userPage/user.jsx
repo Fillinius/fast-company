@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types'
-import api from '../../../api';
 import { useParams } from 'react-router-dom';
 import CommementsListComponent from './commmentsListComponent';
 import QualitiesCard from '../../ui/qualitiesCard';
 import CompletedMeetingsCard from '../../ui/complietedMeettingsCard';
 import UserCard from '../../ui/userCard';
+import { useUser } from '../../../hooks/useUsers';
+import { CommentsProvider } from '../../../hooks/useComments';
 
 const User = () => {
   const params = useParams()
   const { userId } = params
-  const [user, setUser] = useState()
-  useEffect(() => {
-    api.users.getById(userId).then((data) => setUser(data))
-  }, [])
+  const { getUserById } = useUser()
+  const user = getUserById(userId)
+  // const [user, setUser] = useState()
+  // useEffect(() => {
+  //   api.users.getById(userId).then((data) => setUser(data))
+  // }, [])
   return (
     user
       ? <div className="container">
@@ -24,7 +27,9 @@ const User = () => {
             <CompletedMeetingsCard data={user.completedMeetings} />
           </div>
           <div className="col-md-8">
-            <CommementsListComponent />
+            <CommentsProvider>
+              <CommementsListComponent />
+            </CommentsProvider>
           </div>
         </div>
       </div>

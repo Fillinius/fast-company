@@ -10,8 +10,8 @@ function formatTime(data) {
     if (dayDif === 0) {
       if (hoursDif === 0) {
         if (minDif >= 0 && minDif < 5) return '1 минуту назад'
-        if (minDif >= 5 && minDif < 10) return '5'
-        if (minDif > 10 && minDif < 30) return '10'
+        if (minDif >= 5 && minDif < 10) return '5 минут назад'
+        if (minDif > 10 && minDif < 30) return '10 минут назад'
 
         return '30'
       }

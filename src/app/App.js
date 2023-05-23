@@ -12,31 +12,32 @@ import UserProvider from './hooks/useUsers'
 import { ProfessionProvider } from './hooks/useProfession'
 import { QualityProvider } from './hooks/useQuality'
 import AuthProvider from './hooks/useAuth'
-import LoginProvider from './hooks/useLogin'
+import ProtectedRoute from './components/common/protectedRoute'
+import LogOut from './components/logOut'
 
 function App() {
   return (
     <div>
-      <LoginProvider>
-        <AuthProvider>
-          <NavBar />
-          <QualityProvider>
-            <ProfessionProvider>
-              <UserProvider>
-                <Switch>
-                  <Route exact path="/users/:userId" component={User} />
-                  <Route path="/users/:userId/:edit?" component={UserEdit} />
-                  <Route path="/users" component={Users} />
-                  <Route path="/login/:type?" component={Login} />
-                  <Route path="/404" component={NotFound} />
-                  <Route path="/" component={Main} />
-                  <Redirect to="404" />
-                </Switch>
-              </UserProvider>
-            </ProfessionProvider>
-          </QualityProvider>
-        </AuthProvider>
-      </LoginProvider>
+      <AuthProvider>
+        <NavBar />
+        <QualityProvider>
+          <ProfessionProvider>
+            <UserProvider>
+              <Switch>
+                <Route exact path="/users/:userId" component={User} />
+                <Route path="/users/:userId/:edit?" component={UserEdit} />
+                <ProtectedRoute path="/users" component={Users} />
+                <Route path="/login/:type?" component={Login} />
+                <Route path="/logOut" component={LogOut} />
+                <Route path="/404" component={NotFound} />
+                <Route path="/" component={Main} />
+                <Redirect to="404" />
+              </Switch>
+            </UserProvider>
+          </ProfessionProvider>
+        </QualityProvider>
+      </AuthProvider>
+
       <ToastContainer />
     </div>
   )

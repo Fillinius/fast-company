@@ -28,7 +28,7 @@ export function validator(data, config) {
       }
       case 'isMinWord': {
         const word = data.length
-        statusValidate = word <= 8
+        statusValidate = word <= data.value
         break
       }
       default:

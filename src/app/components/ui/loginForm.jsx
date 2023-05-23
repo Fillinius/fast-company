@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import TextField from '../common/form/textField';
 import { validator } from '../../utils/validator';
 import CheckBoxField from '../common/form/checkBoxField';
-import { useLogin } from '../../hooks/useLogin';
+// import { useLogin } from '../../hooks/useLogin';
 import { useHistory } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 //import * as yup from 'yup'
 
 const LoginForm = () => {
   // console.log(process.env);
   const history = useHistory()
+  // console.log(history.location.state.from.pathname);
   const [data, setData] = useState({ email: "", password: "", stayOn: false })
   const [errors, setErrors] = useState({}) // к блоку ошибка
-  const { login } = useLogin()
+  const { login } = useAuth()
   // блок событие ввода данных в форму
   const handleChange = (target) => {
     setData((prevState) => ({
@@ -41,11 +43,10 @@ const LoginForm = () => {
     const isValid = validate()  // относится к блок ошибка
     if (!isValid)
       return        // относится к блок ошибка
-
-    console.log(data);
+    // console.log(data);
     try {
       await login(data)
-      history.push('/')
+      history.push(history.location.state ? history.location.state.from.pathname : '/')
     } catch (error) {
       setErrors(error)
     }
@@ -73,23 +74,23 @@ const LoginForm = () => {
       isRequired: {
         message: "Электронная почта обязательна  к заполнению"
       },
-      isEmail: {
-        message: "Email введен некорректно"
-      }
+      // isEmail: {
+      //   message: "Email введен некорректно"
+      // }
     },
     password: {
       isRequired: {
         message: "Пароль обязателен  к заполнению"
       },
-      isUpperCase: {
-        message: "Пароль должен содержать минимум одну заглавную букву"
-      },
-      isNumber: {
-        message: "Пароль должен содержать минимум одну цифру"
-      },
-      isMinWord: {
-        message: "Пароль должен содержать минимум 8 символов"
-      }
+      // isUpperCase: {
+      //   message: "Пароль должен содержать минимум одну заглавную букву"
+      // },
+      // isNumber: {
+      //   message: "Пароль должен содержать минимум одну цифру"
+      // },
+      // isMinWord: {
+      //   message: "Пароль должен содержать минимум 8 символов"
+      // }
     }
   }
 

@@ -1,20 +1,41 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import configFile from '../config.json'
+import { httpAuth } from '../hooks/useAuth'
+import localstorageService from './localstorage.service'
 
 const http = axios.create({
   baseURL: configFile.apiEndpoint,
 })
 
 http.interceptors.request.use(
-  function (config) {
+  async function (config) {
     // console.log(config)
     // проверка на наличии слеш в строке браузера
     if (configFile.isFireBase) {
       const containSlash = /\/$/gi.test(config.url)
       config.url =
         (containSlash ? config.url.slice(0, -1) : config.url) + '.json'
+      const expiresData = localstorageService.getExpiresToken()
+      const refreshToken = localstorageService.getRefreshToken()
+      if (refreshToken && expiresData < Date.now()) {
+        const { data } = await httpAuth.post('token', {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+        })
+        // console.log(data)
+        localstorageService.setTokens({
+          refreshToken: data.refresh_token,
+          idToken: data.id_token,
+          expiresIn: data.expires_in,
+          localId: data.user_id,
+        })
+      }
       // config.url = config.url.slice(0, -1) + '.json'
+      const accessToken = localstorageService.getAccessToken()
+      if (accessToken) {
+        config.params = { ...config.params, auth: accessToken }
+      }
     }
     return config
   },
@@ -23,11 +44,11 @@ http.interceptors.request.use(
   }
 )
 function transformData(data) {
-  return data
+  return data && !data._id
     ? Object.keys(data).map((key) => ({
         ...data[key],
       }))
-    : []
+    : data
 }
 http.interceptors.response.use(
   (res) => {
@@ -55,5 +76,6 @@ const httpService = {
   post: http.post,
   put: http.put,
   delete: http.delete,
+  patch: http.patch,
 }
 export default httpService

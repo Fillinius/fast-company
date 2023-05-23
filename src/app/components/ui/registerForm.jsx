@@ -18,13 +18,14 @@ const RegisterForm = () => {
     password: "",
     profession: "",
     sex: "male",
+    name: "",
     qualities: [],
     licence: false
   })
   // получение данных через хук
   const { singUp } = useAuth()
-  const { quality } = useQuality()
-  const qualityList = quality.map((q) => ({
+  const { qualities } = useQuality()
+  const qualityList = qualities.map((q) => ({
     label: q.name,
     value: q._id
   }))
@@ -106,6 +107,15 @@ const RegisterForm = () => {
         message: "Email введен некорректно"
       }
     },
+    name: {
+      isRequired: {
+        message: "имя обязательно  для заполнения"
+      },
+      isMinWord: {
+        message: "Имя должено содержать минимум 3 символов",
+        value: 3
+      }
+    },
     password: {
       isRequired: {
         message: "Пароль обязателен  к заполнению"
@@ -117,7 +127,8 @@ const RegisterForm = () => {
         message: "Пароль должен содержать минимум одну цифру"
       },
       isMinWord: {
-        message: "Пароль должен содержать минимум 8 символов"
+        message: "Пароль должен содержать минимум 8 символов",
+        value: 8
       }
     },
     profession: {
@@ -134,11 +145,17 @@ const RegisterForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <TextField
-        label="Почта"
+        label="Электронная почта"
         value={data.email}
         name="email"
         onChange={handleChange}
         error={errors.email} />
+      <TextField
+        label="Имя"
+        value={data.name}
+        name="name"
+        onChange={handleChange}
+        error={errors.name} />
       <TextField
         label="Пароль"
         type="password"

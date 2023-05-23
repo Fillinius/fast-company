@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import API from '../../api';
+import React, { useState } from 'react';
 import { validator } from '../../utils/validator'
 import PropTypes from 'prop-types';
-import SelectedField from '../common/form/selectedField';
 import TextAriaField from '../common/form/textAriaField'
 
-const initialData = { userId: ' ', content: ' ' }
-
 const AddCommentForm = ({ onSubmit }) => {
-  const [data, setData] = useState(initialData)
-  const [users, setUsers] = useState({})
+  const [data, setData] = useState({})
   const [errors, setErrors] = useState({})
   const handleChangeComment = (target) => {
     setData((prev) => ({
@@ -34,11 +29,9 @@ const AddCommentForm = ({ onSubmit }) => {
     setErrors(errors)
     return Object.keys(errors).length === 0
   }
-  useEffect(() => {
-    API.users.fetchAll().then(setUsers)
-  }, [])
+
   const clearForm = () => {
-    setData(initialData)
+    setData({})
     setErrors({})
   }
   const handleSubmit = (e) => {
@@ -48,27 +41,14 @@ const AddCommentForm = ({ onSubmit }) => {
     onSubmit(data)
     clearForm()
   }
-  const arrayUsers =
-    users &&
-    Object.keys(users).map((userId) => ({
-      name: users[userId].name,
-      value: users[userId]._id
-    }))
   return (
     <>
       <h2>New comment</h2>
       <form onSubmit={handleSubmit}>
-        <SelectedField
-          onChange={handleChangeComment}
-          options={arrayUsers}
-          name='userId'
-          value={data.userId}
-          defaultOption='Выберите пользователя'
-          error={errors.userId} />
         <TextAriaField
           onChange={handleChangeComment}
           name='content'
-          value={data.content}
+          value={data.content || ''}
           label='Ваше Сообщение'
           error={errors.content}
         />
