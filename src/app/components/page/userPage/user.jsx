@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom';
-import CommementsListComponent from './commmentsListComponent';
 import QualitiesCard from '../../ui/qualitiesCard';
 import CompletedMeetingsCard from '../../ui/complietedMeettingsCard';
 import UserCard from '../../ui/userCard';
 import { useUser } from '../../../hooks/useUsers';
 import { CommentsProvider } from '../../../hooks/useComments';
+import CommementsListComponent from './commmentsListComponent';
 
 const User = () => {
   const params = useParams()

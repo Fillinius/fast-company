@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // import API from '../../api'
-import formatTime from '../../utils/formatTime'
-import { useUser } from '../../hooks/useUsers';
-import { useAuth } from '../../hooks/useAuth';
+import formatTime from '../../../utils/formatTime'
+import { useUser } from '../../../hooks/useUsers';
+import { useAuth } from '../../../hooks/useAuth';
 
 const Comment = ({
   content,

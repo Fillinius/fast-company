@@ -10,27 +10,28 @@ export const useQuality = () => {
 }
 
 export const QualityProvider = ({ children }) => {
-  const [qualities, setQuality] = useState([])
+  const [qualities, setQualities] = useState([])
   const [error, setError] = useState(null)
   const [isLoading, setLoading] = useState(true)
 
   useEffect(() => {
+    const getQualityList = async () => {
+      try {
+        const { content } = await qualityService.get()
+        setQualities(content)
+        setLoading(false)
+      } catch (error) {
+        errorCatcher(error)
+      }
+    }
     getQualityList()
   }, [])
 
-  function getQuality(id) {
+  const getQuality = (id) => {
     return qualities.find((q) => q._id === id)
   }
 
-  async function getQualityList() {
-    try {
-      const { content } = await qualityService.get()
-      setQuality(content)
-      setLoading(false)
-    } catch (error) {
-      errorCatcher(error)
-    }
-  }
+
   function errorCatcher(error) {
     const { message } = error.response.data
     setError(message)
@@ -42,7 +43,12 @@ export const QualityProvider = ({ children }) => {
     }
   }, [error])
   return (
-    <QualityContext.Provider value={{ qualities, isLoading, getQuality }}>
+    <QualityContext.Provider
+      value={{
+        qualities,
+        isLoading,
+        getQuality
+      }}>
       {children}
     </QualityContext.Provider>
   )

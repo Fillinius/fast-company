@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import { paginate } from "../utils/paginate";
-import Pagination from "./common/pagination";
-import GroupList from "./common/groupList";
-// import api from "../api"
-import SearchStatus from "./ui/searchStatus";
-import UserTable from "./ui/usersTable";
+import Pagination from "../components/common/pagination";
+import GroupList from "../components/common/groupList";
+import SearchStatus from "../components/ui/searchStatus";
+import UserTable from "../components/ui/usersTable";
 import _ from "lodash";
-import Search from "./search";
+import Search from "../components/search";
 import { useUser } from "../hooks/useUsers";
-import { useProfession } from "../hooks/useProfession";
 import { useAuth } from "../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { getProfessions, getProfessionsLoadingStatus } from "../store/professions";
 
 const Users = () => {
     const { users } = useUser()
-    const { professions, isLoading: professionsIsLoading } = useProfession()
+    const professions = useSelector(getProfessions())
+    const professionsIsLoading = useSelector(getProfessionsLoadingStatus())
     const { currentUser } = useAuth()
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedProf, setSelectedProf] = useState()
@@ -21,14 +22,12 @@ const Users = () => {
     const [sortBy, setSortBy] = useState({ iter: 'name', order: 'asc' })
     const pageSize = 4 // отображаем по 4 пользователя на каждой страние 
 
-    // const [users, setUsers] = useState()
     // При использовании асинхронного запроса
     // useEffect(() => {
     //     api.users.fetchAll().then((data) => setUsers(data))
     // }, [])
 
     const handleDelete = (userId) => {
-        //setUsers(users.filter((user) => user._id !== userId))
         console.log('userId', userId);
     }
     const handleToggleBookMark = (id) => {
@@ -42,11 +41,6 @@ const Users = () => {
         //setUsers( newArray)
     }
 
-    // const [professions, setProfession] = useState()
-    // useEffect(() => {
-    //     api.professions.fetchAll().then((data) => setProfession(data))
-    // }, [])
-
     const handleProfessionSelect = (item) => {
         setSearch("")
         setSelectedProf(item)
@@ -58,9 +52,6 @@ const Users = () => {
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex)// если стр была выбрана
     } // метод который отлав клик при нажатии на стр (на какую стр клик)
-
-    //const userGroup = paginate(users, currentPage, pageSize)
-
 
     if (users) {
 
@@ -81,10 +72,7 @@ const Users = () => {
         }
         //// метод по search
         const handleChangeSearch = ({ target }) => {
-            // setSelectedProf()
             setSearch(target.value)
-
-
         }
         const searchTextUser = users.filter((user) =>
             user.name.toLowerCase().includes(search.toLowerCase()))

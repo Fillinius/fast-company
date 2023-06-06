@@ -5,10 +5,10 @@ import RadioField from '../common/form/radioField';
 import SelectedField from '../common/form/selectedField';
 import TextField from '../common/form/textField';
 import { validator } from '../../utils/validator'
-import { useQuality } from '../../hooks/useQuality';
-import { useProfession } from '../../hooks/useProfession';
 import { useAuth } from '../../hooks/useAuth';
-
+import { useSelector } from 'react-redux';
+import { getQualities, getQualitiesLoadingStatus } from '../../store/qualities';
+import { getProfessions, getProfessionsLoadingStatus } from '../../store/professions';
 
 const UserEdit = () => {
   const { userId } = useParams()
@@ -17,28 +17,41 @@ const UserEdit = () => {
   const [isLoading, setIsLoading] = useState(true)
   const { currentUser, getUpdateUserData } = useAuth()
   const [data, setData] = useState()
-  const { qualities, isLoading: qualityIsLoading } = useQuality()
-  const { professions, isLoading: professionIsLoading } = useProfession()
-  // console.log(professions, 'profession');
-  // console.log(qualities, 'qualities')
-  console.log(data, 'data');
-  // console.log(currentUser);
+
+  const professions = useSelector(getProfessions())
+  const professionIsLoading = useSelector(getProfessionsLoadingStatus())
+
+  const qualities = useSelector(getQualities())
+  const qualityIsLoading = useSelector(getQualitiesLoadingStatus())
+  function getQuality(elements) {
+    const qualitiesArray = [];
+    for (const elem of elements) {
+      for (const quality of qualities) {
+        if (elem === qualities._id) {
+          qualitiesArray.push(quality)
+          break
+        }
+      }
+    }
+    return qualitiesArray;
+  }
+  const transformData = () => getQuality(currentUser.qualities).map((q) => ({ label: q.name, value: q._id }))
+
+  useEffect(() => {
+    if (!professionIsLoading && !qualityIsLoading && currentUser && !data) {
+      setData({
+        ...currentUser
+        , qualities: transformData(currentUser.qualities)
+      })
+    }
+  }, [qualityIsLoading, professionIsLoading, data, currentUser,])
+  // console.log(data);
 
   useEffect(() => {
     if (data && isLoading) {
       setIsLoading(false)
     }
   }, [data])
-  const transformData = () => getQualities(currentUser.qualities).map((q) => ({ label: q.name, value: q._id }))
-  useEffect(() => {
-    if (!qualityIsLoading && !professionIsLoading && !data && currentUser) {
-      setData({
-        ...currentUser
-        , qualities: transformData(currentUser.qualities)
-      })
-      console.log(data);
-    }
-  }, [qualityIsLoading, professionIsLoading, data, currentUser,])
 
   // блок событие ввода данных в форму
   const handleChange = (target) => {
@@ -47,20 +60,7 @@ const UserEdit = () => {
       [target.name]: target.value
     }))
   }
-  function getQualities(elements) {
-    const qualitiesArray = [];
-    for (const elem of elements) {
-      for (const quality in qualities) {
-        // console.log(elem);
-        // console.log(qualities._id);
-        if (elem === qualities._id) {
-          qualitiesArray.push(quality)
-        }
-      }
-    }
-    return qualitiesArray;
 
-  }
   const qualitiesList = qualities.map((qualitie) => ({
     label: qualitie.name,
     value: qualitie._id
@@ -79,7 +79,6 @@ const UserEdit = () => {
       qualities: data.qualities.map((q) => q.value)
     };
     try {
-      console.log(newData);
       await getUpdateUserData(newData);
       history.push(`/users/${userId}`);
     } catch (error) {

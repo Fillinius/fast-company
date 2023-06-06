@@ -5,10 +5,11 @@ import SelectedField from '../common/form/selectedField';
 import RadioField from '../common/form/radioField';
 import MultiSelectField from '../common/form/multiSelectField';
 import CheckBoxField from '../common/form/checkBoxField';
-import { useQuality } from '../../hooks/useQuality';
-import { useProfession } from '../../hooks/useProfession';
 import { useAuth } from '../../hooks/useAuth';
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { getQualities } from '../../store/qualities';
+import { getProfessions } from '../../store/professions';
 
 
 const RegisterForm = () => {
@@ -24,12 +25,13 @@ const RegisterForm = () => {
   })
   // получение данных через хук
   const { singUp } = useAuth()
-  const { qualities } = useQuality()
+
+  const qualities = useSelector(getQualities())
   const qualityList = qualities.map((q) => ({
     label: q.name,
     value: q._id
   }))
-  const { professions } = useProfession()
+  const professions = useSelector(getProfessions())
   const professionsList = professions.map((p) => ({
     label: p.name,
     value: p._id
@@ -48,35 +50,6 @@ const RegisterForm = () => {
     const isValid = validate();
     if (!isValid) return;
 
-    // const { profession, qualities } = data;
-    // console.log({
-    //   ...data,
-    //   profession: getProfessionById(profession),
-    //   qualities: getQualities(qualities)
-    // })       
-    // // относится к блок ошибка
-    // const getProfessionById = (id) => {
-    //   for (const prof of professions) {
-    //     if (prof.value === id) {
-    //       return { _id: prof.value, name: prof.label };
-    //     }
-    //   }
-    // };
-    // const getQualities = (elements) => {
-    //   const qualitiesArray = [];
-    //   for (const elem of elements) {
-    //     for (const quality in qualities) {
-    //       if (elem.value === qualities[quality].value) {
-    //         qualitiesArray.push({
-    //           _id: qualities[quality].value,
-    //           name: qualities[quality].label,
-    //           color: qualities[quality].color
-    //         });
-    //       }
-    //     }
-    //   }
-    //   return qualitiesArray;
-    // }
     const newData = { ...data, qualities: data.qualities.map((q) => q.value) }
     try {
       await singUp(newData)

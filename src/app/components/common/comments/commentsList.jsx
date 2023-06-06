@@ -1,6 +1,7 @@
 import React from 'react';
-import Comment from '../page/comment';
+
 import PropTypes from 'prop-types';
+import Comment from './comment';
 const CommentsList = ({ comments, onDelete }) => {
   return (comments.map((comment) => (
     <Comment
