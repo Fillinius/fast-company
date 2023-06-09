@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import API from '../../api'
 import formatTime from '../../../utils/formatTime'
-import { useUser } from '../../../hooks/useUsers';
-import { useAuth } from '../../../hooks/useAuth';
+import { useSelector } from 'react-redux';
+import { getCurrentUserId, getUsersById } from '../../../store/users';
 
 const Comment = ({
   content,
@@ -12,19 +12,15 @@ const Comment = ({
   userId,
   onDelete
 }) => {
-  const { getUserById } = useUser()
-  const { currentUser } = useAuth()
-  const user = getUserById(userId)
-  // useEffect(() => {
-  //   API.users.getById(userId).then((data) => setUser(data))
-  // }, [])
+  const user = useSelector(getUsersById(userId))
+  const currentUserId = useSelector(getCurrentUserId())
   return (
     <div className="bg-light card-body  mb-3">
       <div className="row">
         <div className="col">
           <div className="d-flex flex-start ">
             <img
-              src={user.image}
+              // src={user.image}
               className="rounded-circle shadow-1-strong me-3"
               alt="avatar"
               width="65"
@@ -36,11 +32,10 @@ const Comment = ({
                   <p className="mb-1 ">
                     {user && user.name}{' '}
                     <span className="small">
-                      {/* - {created} */}
                       - {formatTime(created)}
                     </span>
                   </p>
-                  {currentUser._id === userId && (
+                  {currentUserId === userId && (
                     <button
                       className="btn btn-sm text-primary d-flex align-items-center"
                       onClick={() => onDelete(id)}

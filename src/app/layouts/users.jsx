@@ -6,16 +6,15 @@ import SearchStatus from "../components/ui/searchStatus";
 import UserTable from "../components/ui/usersTable";
 import _ from "lodash";
 import Search from "../components/search";
-import { useUser } from "../hooks/useUsers";
-import { useAuth } from "../hooks/useAuth";
 import { useSelector } from "react-redux";
 import { getProfessions, getProfessionsLoadingStatus } from "../store/professions";
+import { getCurrentUserId, getUsers } from "../store/users";
 
 const Users = () => {
-    const { users } = useUser()
+    const users = useSelector(getUsers())
     const professions = useSelector(getProfessions())
     const professionsIsLoading = useSelector(getProfessionsLoadingStatus())
-    const { currentUser } = useAuth()
+    const currentUserId = useSelector(getCurrentUserId())
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedProf, setSelectedProf] = useState()
     const [search, setSearch] = useState("")
@@ -60,7 +59,7 @@ const Users = () => {
                 ? data.filter((user) =>
                     JSON.stringify(user.profession) === JSON.stringify(selectedProf))
                 : data
-            return filteredUsers.filter((u) => u._id !== currentUser._id)
+            return filteredUsers.filter((u) => u._id !== currentUserId)
         }
         const filteredUsers = filterUsers(users)
 

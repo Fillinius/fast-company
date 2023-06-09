@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
 import MultiSelectField from '../common/form/multiSelectField';
 import RadioField from '../common/form/radioField';
 import SelectedField from '../common/form/selectedField';
 import TextField from '../common/form/textField';
 import { validator } from '../../utils/validator'
-import { useAuth } from '../../hooks/useAuth';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getQualities, getQualitiesLoadingStatus } from '../../store/qualities';
 import { getProfessions, getProfessionsLoadingStatus } from '../../store/professions';
+import { getCurrentUserData, getUpdateUserData } from '../../store/users';
 
 const UserEdit = () => {
-  const { userId } = useParams()
-  const history = useHistory()
+  const dispatch = useDispatch()
+  const currentUser = useSelector(getCurrentUserData())
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(true)
-  const { currentUser, getUpdateUserData } = useAuth()
   const [data, setData] = useState()
 
   const professions = useSelector(getProfessions())
@@ -78,12 +76,9 @@ const UserEdit = () => {
       ...data,
       qualities: data.qualities.map((q) => q.value)
     };
-    try {
-      await getUpdateUserData(newData);
-      history.push(`/users/${userId}`);
-    } catch (error) {
-      setErrors(error);
-    }
+    dispatch(getUpdateUserData(newData));
+
+
   };
   // блок валидации по полю
   useEffect(() => {

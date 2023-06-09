@@ -4,19 +4,16 @@ import { useParams } from 'react-router-dom';
 import QualitiesCard from '../../ui/qualitiesCard';
 import CompletedMeetingsCard from '../../ui/complietedMeettingsCard';
 import UserCard from '../../ui/userCard';
-import { useUser } from '../../../hooks/useUsers';
 import { CommentsProvider } from '../../../hooks/useComments';
 import CommementsListComponent from './commmentsListComponent';
+import { useSelector } from 'react-redux';
+import { getUsersById } from '../../../store/users';
 
 const User = () => {
   const params = useParams()
   const { userId } = params
-  const { getUserById } = useUser()
-  const user = getUserById(userId)
-  // const [user, setUser] = useState()
-  // useEffect(() => {
-  //   api.users.getById(userId).then((data) => setUser(data))
-  // }, [])
+  const user = useSelector(getUsersById(userId))
+
   return (
     user
       ? <div className="container">

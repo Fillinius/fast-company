@@ -18,8 +18,6 @@ const QualitiesList = ({ qualities }) => {
       <Qualitie key={qual._id} {...qual} />
     ))}
   </>
-
-
 }
 QualitiesList.propTypes = {
   qualities: PropTypes.array

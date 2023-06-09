@@ -5,6 +5,7 @@ import userService from '../services/userService';
 import { toast } from 'react-toastify';
 import localstorageService, { setTokens } from '../services/localstorage.service';
 import { useHistory } from 'react-router-dom';
+import randomInt from '../utils/getRandomInt';
 
 export const httpAuth = axios.create({
   baseURL: 'https://identitytoolkit.googleapis.com/v1/',
@@ -29,9 +30,6 @@ const AuthProvider = ({ children }) => {
     localstorageService.removeAuthData()
     setCurrentUser(null)
     history.push('/')
-  }
-  function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min)
   }
   // ф-я проверки пользователя
   async function login({ email, password }) {
