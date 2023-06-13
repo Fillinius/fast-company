@@ -18,10 +18,10 @@ const userService = {
     )
     return data
   },
-  getUpdateCurrentUser: async (params) => {
+  getUpdateCurrentUser: async (payload) => {
     const { data } = await httpService.patch(
       userEndPoint + localstorageService.getUserId(),
-      params
+      payload
     )
     return data
   },

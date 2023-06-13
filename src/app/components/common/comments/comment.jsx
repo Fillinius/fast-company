@@ -14,6 +14,7 @@ const Comment = ({
 }) => {
   const user = useSelector(getUsersById(userId))
   const currentUserId = useSelector(getCurrentUserId())
+  // console.log('src={user.image}', user.image);
   return (
     <div className="bg-light card-body  mb-3">
       <div className="row">

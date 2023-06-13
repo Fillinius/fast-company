@@ -4,6 +4,7 @@ import authService from '../services/auth.service'
 import localstorageService from '../services/localstorage.service'
 import randomInt from '../utils/getRandomInt'
 import history from '../utils/histori'
+import { generateAuthError } from '../utils/generateAuthError'
 
 const initialState = localstorageService.getAccessToken()
   ? {
@@ -58,7 +59,16 @@ const usersSlice = createSlice({
       state.dataLoaded = false
     },
     userUpdate: (state, action) => {
-      state.entities.find((user) => user._id === action.payload._id)
+      // изменяет данные, но не обновляет (обновление вручную)
+      // state.entities.find((user) => user._id === action.payload._id)
+
+      // изменяет и сразу обновляет данные
+      state.entities[
+        state.entities.findIndex((u) => u._id === action.payload._id)
+      ] = action.payload
+    },
+    authRequested: (state) => {
+      state.error = null
     },
   },
 })
@@ -91,7 +101,13 @@ export const login =
       localstorageService.setTokens(data)
       history.push(redirect)
     } catch (error) {
-      dispatch(authRequestFaild(error.message))
+      const { code, message } = error.response.data.error
+      if (code === 400) {
+        const errorMessage = generateAuthError(message)
+        dispatch(authRequestFaild(errorMessage))
+      } else {
+        dispatch(authRequestFaild(error.message))
+      }
     }
   }
 
@@ -127,6 +143,7 @@ export const getUpdateUserData = (payload) => async (dispatch) => {
   try {
     const { content } = await userService.getUpdateCurrentUser(payload)
     dispatch(userUpdate(content))
+    console.log(`/users/${content._id}`)
     history.push(`/users/${content._id}`)
   } catch (error) {
     dispatch(userUpdateFailed(error.message))
@@ -143,7 +160,7 @@ function createUser(payload) {
     dispatch(userCreateRequested())
     try {
       const { content } = await userService.create(payload)
-      console.log(content)
+      // console.log(content)
       dispatch(userCreated(content))
       history.push('/users')
     } catch (error) {
@@ -181,5 +198,7 @@ export const getCurrentUserData = () => (state) => {
     ? state.users.entities.find((u) => u._id === state.users.auth.userId)
     : null
 }
+
+export const getAuthErrors = () => (state) => state.users.error
 
 export default usersReducer

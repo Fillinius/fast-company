@@ -3,15 +3,16 @@ import TextField from '../common/form/textField';
 import { validator } from '../../utils/validator';
 import CheckBoxField from '../common/form/checkBoxField';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { login } from '../../store/users';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAuthErrors, login } from '../../store/users';
 //import * as yup from 'yup'
 
 const LoginForm = () => {
   const history = useHistory()
   const dispath = useDispatch()
   const [data, setData] = useState({ email: "", password: "", stayOn: false })
-  const [errors, setErrors] = useState({}) // к блоку ошибка
+  const [errors, setErrors] = useState({})
+  const interError = useSelector(getAuthErrors())
 
   // блок событие ввода данных в форму
   const handleChange = (target) => {
@@ -111,6 +112,7 @@ const LoginForm = () => {
         onChange={handleChange}>
         Оставаться в системе
       </CheckBoxField>
+      {interError && <p className='text-danger'>{interError}</p>}
       <button
         className="btn btn-primary w-100 mx-auto"
         type='submit'

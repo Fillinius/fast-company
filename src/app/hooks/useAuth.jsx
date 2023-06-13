@@ -60,7 +60,6 @@ const AuthProvider = ({ children }) => {
           const errorObject = { email: "Слишком много попыток ввода, попробуйте позже" }
           throw errorObject
         }
-
       }
     }
   }
@@ -97,7 +96,6 @@ const AuthProvider = ({ children }) => {
           const errorObject = { email: "Пользователь с такой почтой уже зарегистрирован" }
           throw errorObject
         }
-
       }
     }
   }

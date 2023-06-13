@@ -21,11 +21,12 @@ const UserEdit = () => {
 
   const qualities = useSelector(getQualities())
   const qualityIsLoading = useSelector(getQualitiesLoadingStatus())
+
   function getQuality(elements) {
     const qualitiesArray = [];
     for (const elem of elements) {
       for (const quality of qualities) {
-        if (elem === qualities._id) {
+        if (elem === quality._id) {
           qualitiesArray.push(quality)
           break
         }
@@ -33,6 +34,7 @@ const UserEdit = () => {
     }
     return qualitiesArray;
   }
+
   const transformData = () => getQuality(currentUser.qualities).map((q) => ({ label: q.name, value: q._id }))
 
   useEffect(() => {
@@ -72,13 +74,10 @@ const UserEdit = () => {
     e.preventDefault();
     const isValid = validate();
     if (!isValid) return;
-    const newData = {
+    dispatch(getUpdateUserData({
       ...data,
       qualities: data.qualities.map((q) => q.value)
-    };
-    dispatch(getUpdateUserData(newData));
-
-
+    }));
   };
   // блок валидации по полю
   useEffect(() => {
