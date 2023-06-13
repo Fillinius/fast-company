@@ -1,27 +1,31 @@
 import React, { useEffect } from 'react';
 
 import { orderBy } from 'lodash';
-import { useComments } from '../../../hooks/useComments';
+// import { useComments } from '../../../hooks/useComments';
 import CommentsList, { AddCommentForm } from '../../common/comments';
 import { useDispatch, useSelector } from 'react-redux';
-import { getComments, getCommentsLoadingStatus, loadcommentsList } from '../../../store/comments';
+import { createComment, getComments, getCommentsLoadingStatus, loadcommentsList, removeComment } from '../../../store/comments';
 import { useParams } from 'react-router-dom';
+import { getUsersById } from '../../../store/users';
 
 const CommementsListComponent = () => {
   const { userId } = useParams()
   const isLoading = useSelector(getCommentsLoadingStatus())
+  const { name } = useSelector(getUsersById(userId))
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(loadcommentsList(userId))
   }, [userId])
   const comments = useSelector(getComments())
-  const { createComment, removeComment } = useComments()
+
+  // const { removeComment } = useComments()
 
   const handleDeleteComment = (id) => {
-    removeComment(id);
+    dispatch(removeComment(id));
   }
   const handleSubmit = (data) => {
-    createComment(data)
+    console.log(createComment(data, userId, name));
+    (dispatch(createComment(data, userId, name)))
   }
   const sortedCommentsPage = orderBy(comments, ['created_at'], ['desc'])
 
