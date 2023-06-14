@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import QualitiesCard from '../../ui/qualitiesCard';
 import CompletedMeetingsCard from '../../ui/complietedMeettingsCard';
 import UserCard from '../../ui/userCard';
-import { CommentsProvider } from '../../../hooks/useComments';
+// import { CommentsProvider } from '../../../hooks/useComments';
 import CommementsListComponent from './commmentsListComponent';
 import { useSelector } from 'react-redux';
 import { getUsersById } from '../../../store/users';
@@ -24,9 +24,9 @@ const User = () => {
             <CompletedMeetingsCard data={user.completedMeetings} />
           </div>
           <div className="col-md-8">
-            <CommentsProvider>
-              <CommementsListComponent />
-            </CommentsProvider>
+            {/* <CommentsProvider> */}
+            <CommementsListComponent />
+            {/* </CommentsProvider> */}
           </div>
         </div>
       </div>
